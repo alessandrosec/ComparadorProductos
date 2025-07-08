@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  scraper:
+    build: ./scraper
+    container_name: scraper
+    depends_on:
+      - mongodb
+    # Esto es importante: el scraper debe ejecutarse DESPUÉS de que MongoDB esté listo
+    # Podemos usar un script de espera si el scraper se ejecutara una sola vez al inicio,
+    # pero para una ejecución constante, dependemos del reconnect interno de Mongoose.
+    # Para esta demo, simplemente lo ejecutaremos manualmente o configuraremos un cron si es para producción.
+    # Por ahora, se ejecutará al iniciar el contenedor.
+
+  api:
+    build: ./api
+    container_name: api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      NODE_ENV: production # Buena práctica
+volumes:
+  mongodb_data:
