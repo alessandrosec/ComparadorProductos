@@ -1,1 +1,106 @@
 # ComparadorProductos
+
+# Comparador de Productos con Microservicios
+
+Este proyecto implementa una solución de comparación de productos utilizando microservicios, Node.js, MongoDB y Docker. Permite hacer web scraping de dos "tiendas" simuladas, almacenar los productos en una base de datos MongoDB y consultarlos y compararlos a través de una API REST.
+
+## Objetivo General
+
+Desarrollar una solución basada en microservicios utilizando Node.js y Docker que permita hacer web scraping desde dos tiendas en línea, almacenar los productos en MongoDB y consultar y comparar los productos mediante una API REST. 
+
+## Tecnologías Requeridas
+
+* Node.js
+* Express 
+* Cheerio 
+* MongoDB 
+* Docker y Docker Compose 
+
+## Estructura del Proyecto
+Product-comparator
+├── api/
+│   ├── Dockerfile
+│   ├── index.js
+│   └── package.json
+├── scraper/
+│   ├── Dockerfile
+│   ├── index.js
+│   └── package.json
+├── frontend/
+│   └── index.html
+├── docker-compose.yml
+└── README.md
+
+## Descripción de Componentes
+
+1. **Scraper**: 
+    * Se conecta a dos sitios web de prueba (simulados para esta implementación).
+    * Extrae nombre, precio, descripción, rating y disponibilidad (datos simulados). 
+    * Inserta los productos en MongoDB con el campo 'origen' y la fecha de scraping. 
+
+2. **API REST**: 
+    * Permite consultar todos los productos. 
+    * Filtrar productos por origen.
+    * Comparar productos por nombre entre ambos orígenes. 
+
+3. **MongoDB**: 
+    * Base de datos utilizada para almacenar los productos con su información. 
+
+4. **Docker Compose**:
+    * Levanta los tres servicios (scraper, api, mongodb).
+
+## Requisitos Funcionales Implementados
+
+* Scraper funcional para ambos sitios web (simulado).
+* API REST accesible en el puerto 3000. 
+* Base de datos MongoDB correctamente poblada. 
+* Código modular y bien organizado. 
+
+## Endpoints Esperados
+
+* `GET /productos`: Retorna una lista completa de todos los productos en la base de datos.
+* `GET /productos/origen/:origen`: Retorna productos filtrados por el origen especificado (ej. `store1`, `store2`).
+* `GET /comparar?nombre=XYZ`: Realiza una comparación de productos por nombre entre ambos orígenes. El parámetro `nombre` es requerido.
+
+## Instrucciones de Instalación y Ejecución
+
+Asegúrate de tener Docker y Docker Compose instalados en tu sistema.
+
+1.  **Clonar el repositorio (o crear los archivos manualmente):**
+    ```
+    git clone <https://github.com/alessandrosec/ComparadorProductos.git>
+    cd product-comparator
+    ```
+    (Si creaste los archivos manualmente, ya estás en la carpeta `product-comparator`)
+
+2.  **Construir y levantar los servicios con Docker Compose:**
+    Desde la raíz del proyecto (`product-comparator`), ejecutar:
+    ```bash
+    docker-compose up --build -d
+    ```
+    Esto construirá las imágenes de Docker para el scraper y la API, y luego iniciará todos los contenedores (MongoDB, scraper, API) en segundo plano.
+
+3.  **Verificar el estado de los contenedores:**
+    ```bash
+    docker-compose ps
+    ```
+    Todos los servicios (`mongodb`, `scraper`, `api`) deberían estar en estado `Up`.
+
+4.  **Verificar los logs del scraper (opcional, para asegurar que se ejecutó):**
+    ```bash
+    docker-compose logs scraper
+    ```
+    Deberás ver mensajes indicando que los productos fueron raspados y guardados en MongoDB.
+
+5.  **Acceder a la API REST:**
+    La API estará disponible en `http://localhost:3000`.
+
+    * **Listar todos los productos:**
+        `http://localhost:3000/productos`
+    * **Filtrar productos de `store1`:**
+        `http://localhost:3000/productos/origen/store1`
+    * **Filtrar productos de `store2`:**
+        `http://localhost:3000/productos/origen/store2`
+    * **Comparar productos por nombre (ej. "Product A"):**
+        `http://localhost:3000/comparar?nombre=Product A`
+      
