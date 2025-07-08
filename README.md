@@ -17,6 +17,7 @@ Desarrollar una solución basada en microservicios utilizando Node.js y Docker q
 * Docker y Docker Compose 
 
 ## Estructura del Proyecto
+
 Product-comparator
 ├── api/
 │   ├── Dockerfile
